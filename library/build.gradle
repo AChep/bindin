@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
-    id 'com.vanniktech.maven.publish'
+    id 'maven-publish'
 }
 
 android {
@@ -40,7 +40,35 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
 
-mavenPublish {
-    nexus {
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'com.artemchep.bindin'
+            artifactId = 'bindin'
+            version = VERSION_NAME ?: '1.0'
+
+            pom {
+                name = 'bindin'
+                url = 'https://github.com/AChep/bindin'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'AChep'
+                        name = 'Artem Chepurnoy'
+                        email = 'artemchep@gmail.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/AChep/bindin.git'
+                    developerConnection = 'scm:git:ssh://github.com/AChep/bindin.git'
+                    url = 'https://github.com/AChep/bindin'
+                }
+            }
+        }
     }
 }

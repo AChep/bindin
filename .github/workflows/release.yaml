@@ -26,20 +26,12 @@ jobs:
         run: |
           echo ::set-output name=tag::${GITHUB_REF:10}
           echo ::set-output name=version::${GITHUB_REF:11}
-      - name: "Copy secrets"
-        run: |
-          echo "VERSION_NAME=${{ steps.vars.outputs.version }}" >> gradle.properties
-          echo "signing.keyId=${{ secrets.GPG_KEY_ID }}" >> gradle.properties
-          echo "signing.password=${{ secrets.GPG_PASSWORD }}" >> gradle.properties
-          echo ${{ secrets.GPG_KEY }} | base64 -d | zcat >> secring.gpg
-          echo "mavenCentralRepositoryUsername=${{ secrets.MAVEN_USERNAME }}" >> gradle.properties
-          echo "mavenCentralRepositoryPassword=${{ secrets.MAVEN_PASSWORD }}" >> gradle.properties
       - name: "./gradlew publish"
         uses: eskatos/gradle-command-action@v1
         env:
           JAVA_HOME: ${{ steps.setup-java.outputs.path }}
         with:
-          arguments: assemble publish
+          arguments: assemble
       - name: "Create release"
         id: create_release
         uses: actions/create-release@v1

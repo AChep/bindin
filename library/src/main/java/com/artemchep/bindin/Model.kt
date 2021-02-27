@@ -1,11 +1,9 @@
 package com.artemchep.bindin
 
-private typealias Registration = () -> Unit
-
 class InBinding<T>(
     val data: InBindingData<T>,
-    private val registration: Registration,
-) : Registration by registration
+    val unbind: () -> Unit,
+)
 
 class InBindingData<T> {
     var outValue: Any? = Any()

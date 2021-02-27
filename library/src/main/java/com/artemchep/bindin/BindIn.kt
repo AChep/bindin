@@ -64,7 +64,7 @@ private inline fun <T> LifecycleOwner._bindIn(
     )
     return InBinding(
         data = inBindingData,
-        registration = registration,
+        unbind = registration,
     )
 }
 

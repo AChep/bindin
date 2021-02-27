@@ -17,6 +17,32 @@ dependencies {
 }
 ```
 
+Usage
+----------------
+Let's say you have an existing setup with the `LiveData`:
+```kotlin
+val liveData = MutableLiveData<Boolean>()
+liveData.observe(viewLifecycleOwner) {
+  println(it)
+}
+```
+
+to migrate it you would have to use the `bindIn` function:
+```kotlin
+val liveData = MutableLiveData<Boolean>()
+viewLifecycleOwner.bindIn(liveData) {
+  println(it)
+}
+```
+
+Huh. That looks almost identical, right? The _real benefit_ is that it works for `Flow`s with the exact same syntax!
+```kotlin
+val flow = MutableStateFlow<Boolean>(false)
+viewLifecycleOwner.bindIn(flow) {
+  println(it)
+}
+```
+
 Report a bug or request a feature
 ----------------
 Before creating a new issue please make sure that same or similar issue is not already created by checking [open issues][2] and [closed issues][3] *(please note that there might be multiple pages)*. If your issue is already there, don't create a new one, but leave a comment under already existing one.

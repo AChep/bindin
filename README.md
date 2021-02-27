@@ -43,9 +43,19 @@ viewLifecycleOwner.bindIn(flow) {
 }
 ```
 
+It's guaranteed that the block will only be called on the Main thread and the lifecycle will be in required state!
+You can specify the minimum state using the `minimumLifecycleState` argument.
+
 Advanced usage
 ----------------
-Invoking the `bindIn` function returns the `InBinding` object. To unbind, call its `unbind` lambda it.
+If you want to execute a block instead of subscribing to a flow, use the `bindBlock` function.
+```kotlin
+viewLifecycleOwner.bindBlock {
+  println(it)
+}
+```
+
+Invoking the `bindIn` function returns the `InBinding` object. To unbind, invoke its `unbind` lambda.
 ```kotlin
 val flow = MutableStateFlow<Boolean>(false)
 val binding = viewLifecycleOwner.bindIn(flow) {
@@ -53,6 +63,33 @@ val binding = viewLifecycleOwner.bindIn(flow) {
 }
 // ...
 binding.unbind()
+```
+
+To implement two way binding you may use the `bindOut` method of the `InBinding` class. An example
+usage:
+```kotlin
+val flow = MutableStateFlow<Boolean>(false)
+val binding = viewLifecycleOwner.bindIn(flow) {
+  button.isChecked = it
+}.bindOut(
+  observe = { observer ->
+    button.setOnCheckedChangeListener { _, isChecked ->
+      observer(isChecked)
+    }
+  },
+  pipe = {
+    flow.value = it
+  },
+)
+```
+for some of the views there's already a `bindOut` function
+```kotlin
+val flow = MutableStateFlow<Boolean>(false)
+val binding = viewLifecycleOwner.bindIn(flow) {
+  button.isChecked = it
+}.bindOut(button) {
+  flow.value = it
+}
 ```
 
 Report a bug or request a feature

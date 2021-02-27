@@ -1,6 +1,11 @@
 package com.artemchep.bindin
 
-class InBinding<T>(
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+
+data class InBinding<T>(
+    val lifecycleOwner: LifecycleOwner,
+    val minimumLifecycleState: Lifecycle.State,
     val data: InBindingData<T>,
     val unbind: () -> Unit,
 )

@@ -76,18 +76,31 @@ val binding = viewLifecycleOwner.bindIn(flow) {
     button.setOnCheckedChangeListener { _, isChecked ->
       observer(isChecked)
     }
+    fun() {
+        button.setOnCheckedChangeListener(null)
+    }
   },
   pipe = {
     flow.value = it
   },
 )
 ```
-for some of the views there's already a `bindOut` function
+for some of the views there's already a `bindOut` function.
 ```kotlin
 val flow = MutableStateFlow<Boolean>(false)
 val binding = viewLifecycleOwner.bindIn(flow) {
   button.isChecked = it
 }.bindOut(button) {
+  flow.value = it
+}
+```
+
+You may also want to pass `Flow` to the `bindOut` function.
+```kotlin
+val flow = MutableStateFlow<Boolean>(false)
+val binding = viewLifecycleOwner.bindIn(flow) {
+  button.isChecked = it
+}.bindOut(button.checked()) {
   flow.value = it
 }
 ```

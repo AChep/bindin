@@ -63,6 +63,8 @@ private inline fun <T> LifecycleOwner._bindIn(
         },
     )
     return InBinding(
+        lifecycleOwner = this,
+        minimumLifecycleState = minimumLifecycleState,
         data = inBindingData,
         unbind = registration,
     )

@@ -22,8 +22,12 @@ fun InBinding<String>.bindOut(
     pipe: (String) -> Unit,
 ) = bindOut(
     observe = { observer ->
-        editText.addTextChangedListener {
+        val listener = editText.addTextChangedListener {
             observer(it?.toString().orEmpty())
+        }
+
+        fun() {
+            editText.removeTextChangedListener(listener)
         }
     },
     pipe = pipe

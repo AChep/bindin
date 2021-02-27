@@ -21,6 +21,10 @@ fun InBinding<Boolean>.bindOut(
         view.setOnCheckedChangeListener { _, isChecked ->
             observer(isChecked)
         }
+
+        fun() {
+            view.setOnCheckedChangeListener(null)
+        }
     },
     pipe = pipe
 )

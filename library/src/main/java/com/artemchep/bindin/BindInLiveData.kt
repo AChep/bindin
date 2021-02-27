@@ -1,6 +1,7 @@
 package com.artemchep.bindin
 
 import androidx.annotation.UiThread
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -17,6 +18,8 @@ fun <T> LifecycleOwner.bindIn(
     }
 
     val inBinding = InBinding(
+        lifecycleOwner = this,
+        minimumLifecycleState = Lifecycle.State.STARTED,
         data = inBindingData,
     ) {
         liveData.removeObserver(observer)

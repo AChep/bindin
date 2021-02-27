@@ -1,6 +1,7 @@
 package com.artemchep.bindin
 
 import androidx.annotation.UiThread
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
@@ -28,6 +29,13 @@ fun <T> LifecycleOwner.bindIn(
 )
 
 @UiThread
+fun <T> Fragment.bindIn(
+    flow: Flow<T>,
+    minimumLifecycleState: Lifecycle.State = DEFAULT_MIN_LIFECYCLE_STATE,
+    pipe: (T) -> Unit,
+) = viewLifecycleOwner.bindIn(flow, minimumLifecycleState, pipe)
+
+@UiThread
 fun <T> LifecycleOwner.bindInSuspending(
     flow: Flow<T>,
     minimumLifecycleState: Lifecycle.State = DEFAULT_MIN_LIFECYCLE_STATE,
@@ -41,6 +49,13 @@ fun <T> LifecycleOwner.bindInSuspending(
         }
     },
 )
+
+@UiThread
+fun <T> Fragment.bindIn(
+    flow: Flow<T>,
+    minimumLifecycleState: Lifecycle.State = DEFAULT_MIN_LIFECYCLE_STATE,
+    pipe: suspend (T) -> Unit,
+) = viewLifecycleOwner.bindInSuspending(flow, minimumLifecycleState, pipe)
 
 @Suppress("FunctionName")
 @UiThread
@@ -110,3 +125,9 @@ fun LifecycleOwner.bindBlock(
 
     return registration
 }
+
+@UiThread
+fun <T> Fragment.bindBlock(
+    minimumLifecycleState: Lifecycle.State = Lifecycle.State.STARTED,
+    block: suspend () -> Unit,
+) = viewLifecycleOwner.bindBlock(minimumLifecycleState, block)

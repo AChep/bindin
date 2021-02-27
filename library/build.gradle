@@ -11,7 +11,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
-        versionName VERSION_NAME ?: '1.0'
+        versionName project.version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -45,7 +45,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId = 'com.artemchep.bindin'
             artifactId = 'bindin'
-            version = VERSION_NAME ?: '1.0'
+            version = project.version
 
             pom {
                 name = 'bindin'

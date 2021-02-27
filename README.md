@@ -43,6 +43,18 @@ viewLifecycleOwner.bindIn(flow) {
 }
 ```
 
+Advanced usage
+----------------
+Invoking the `bindIn` function returns the `InBinding` object. To unbind, call its `unbind` lambda it.
+```kotlin
+val flow = MutableStateFlow<Boolean>(false)
+val binding = viewLifecycleOwner.bindIn(flow) {
+  println(it)
+}
+// ...
+binding.unbind()
+```
+
 Report a bug or request a feature
 ----------------
 Before creating a new issue please make sure that same or similar issue is not already created by checking [open issues][2] and [closed issues][3] *(please note that there might be multiple pages)*. If your issue is already there, don't create a new one, but leave a comment under already existing one.

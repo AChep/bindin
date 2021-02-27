@@ -3,14 +3,14 @@ package com.artemchep.bindin.common
 import android.widget.EditText
 import androidx.annotation.UiThread
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import com.artemchep.bindin.InBinding
 import com.artemchep.bindin.bindIn
 import com.artemchep.bindin.bindOut
 import kotlinx.coroutines.flow.Flow
 
 @UiThread
-fun Fragment.bind(
+fun LifecycleOwner.bind(
     flow: Flow<String>,
     view: EditText,
     pipe: (String) -> Unit,

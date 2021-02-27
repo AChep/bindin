@@ -25,12 +25,12 @@ jobs:
       - id: vars
         run: |
           echo ::set-output name=tag::${GITHUB_REF:10}
-      - name: "./gradlew assemble"
+      - name: "./gradlew assembleRelease"
         uses: eskatos/gradle-command-action@v1
         env:
           JAVA_HOME: ${{ steps.setup-java.outputs.path }}
         with:
-          arguments: "assemble -Pversion=${{ steps.vars.outputs.tag }}"
+          arguments: "assembleRelease -Pversion=${{ steps.vars.outputs.tag }}"
       - name: "Create release"
         id: create_release
         uses: actions/create-release@v1

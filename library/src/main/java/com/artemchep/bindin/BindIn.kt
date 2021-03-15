@@ -152,8 +152,6 @@ fun LifecycleOwner.bindBlock(
     }
 
     val registration = {
-        require(isMainThread) { "Unbinding must be done from the UI thread!" }
-
         lifecycle.removeObserver(observer)
         job?.cancel()
         job = null

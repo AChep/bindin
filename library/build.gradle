@@ -1,7 +1,20 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'io.gitlab.arturbosch.detekt' version "1.16.0"
 }
+
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+
+    reports {
+        html.enabled = true
+        sarif.enabled = true
+    }
+}
+
+tasks.detekt.jvmTarget = "1.8"
 
 android {
     compileSdkVersion 30

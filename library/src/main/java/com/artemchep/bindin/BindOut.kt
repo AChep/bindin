@@ -42,6 +42,7 @@ fun <T> InBinding<T>.bindOut(
     )
 }
 
+@Suppress("FunctionName")
 private fun <T> InBinding<T>._pipe(
     value: T,
     /** A pipe to pass data to... */

@@ -6,7 +6,6 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStateAtLeast
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -14,6 +13,14 @@ import kotlinx.coroutines.launch
 
 private val DEFAULT_MIN_LIFECYCLE_STATE = Lifecycle.State.STARTED
 
+/**
+ * Collects the flow each time when and only when the lifecycle
+ * is in the [minimumLifecycleState]. To undo the binding,
+ * invoke the [InBinding.unbind] lambda from the UI thread.
+ *
+ * @see bindIn
+ * @see bindOut
+ */
 @UiThread
 fun <T> LifecycleOwner.bindIn(
     flow: Flow<T>,
@@ -27,6 +34,33 @@ fun <T> LifecycleOwner.bindIn(
     },
 )
 
+/**
+ * The suspending [pipe] is run on the `PausingDispatcher` and hence guarantees
+ * that the lifecycle is in the required state. To undo the binding,
+ * invoke the [InBinding.unbind] lambda from the UI thread.
+ *
+ * Make sure you know the limitations:
+ * ```
+ * viewLifecycleOwner.bindInSuspending(flow) {
+ *   try {
+ *     delay(100L)
+ *     // state >= Lifecycle.State.STARTED is guaranteed!
+ *     println("Hello world")
+ *   } catch (e: IOException) {
+ *     // state >= Lifecycle.State.STARTED is guaranteed!
+ *   } catch (e: Throwable) {
+ *     // state >= Lifecycle.State.STARTED is not guaranteed!
+ *     // Check kotlin.coroutines.cancellation / CancellationException
+ *   } finally {
+ *     // state >= Lifecycle.State.STARTED is not guaranteed!
+ *   }
+ * }
+ * ```
+ *
+ * @see bindIn
+ * @see bindOut
+ * @see bindBlock
+ */
 @UiThread
 fun <T> LifecycleOwner.bindInSuspending(
     flow: Flow<T>,
@@ -71,8 +105,27 @@ private inline fun <T> LifecycleOwner._bindIn(
 }
 
 /**
- * The block will bee executed on the [Dispatchers.Main.immediate] when the state changes from
- * unsupported to [minimumLifecycleState].
+ * The block will be executed on the `PausingDispatcher` when the state changes from
+ * unsupported to [minimumLifecycleState]. To undo the binding,
+ * invoke the result of this function from the UI thread.
+ *
+ * Make sure you know the limitations:
+ * ```
+ * viewLifecycleOwner.bindBlock {
+ *   try {
+ *     delay(100L)
+ *     // state >= Lifecycle.State.STARTED is guaranteed!
+ *     println("Hello world")
+ *   } catch (e: IOException) {
+ *     // state >= Lifecycle.State.STARTED is guaranteed!
+ *   } catch (e: Throwable) {
+ *     // state >= Lifecycle.State.STARTED is not guaranteed!
+ *     // Check kotlin.coroutines.cancellation / CancellationException
+ *   } finally {
+ *     // state >= Lifecycle.State.STARTED is not guaranteed!
+ *   }
+ * }
+ * ```
  */
 @UiThread
 fun LifecycleOwner.bindBlock(
@@ -99,6 +152,8 @@ fun LifecycleOwner.bindBlock(
     }
 
     val registration = {
+        require(isMainThread) { "Unbinding must be done from the UI thread!" }
+
         lifecycle.removeObserver(observer)
         job?.cancel()
         job = null

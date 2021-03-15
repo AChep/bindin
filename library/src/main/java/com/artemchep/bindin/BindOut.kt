@@ -9,12 +9,7 @@ fun <T> InBinding<T>.bindOut(
     pipe: (T) -> Unit,
 ): InBinding<T> {
     val unbindObserve = observe { value ->
-        if (data.eq(value)) {
-            return@observe
-        }
-
-        data.outValue = value
-        pipe(value)
+        _pipe(value, pipe)
     }
     return copy(
         unbind = {
@@ -43,7 +38,7 @@ fun <T> InBinding<T>.bindOut(
 }
 
 @Suppress("FunctionName")
-private fun <T> InBinding<T>._pipe(
+private inline fun <T> InBinding<T>._pipe(
     value: T,
     /** A pipe to pass data to... */
     pipe: (T) -> Unit,

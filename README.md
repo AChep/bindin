@@ -1,6 +1,7 @@
 # bindin
 
 [![](https://jitpack.io/v/AChep/bindin.svg)](https://jitpack.io/#AChep/bindin)
+[![Detekt](https://github.com/AChep/bindin/actions/workflows/detekt.yaml/badge.svg)](https://github.com/AChep/bindin/actions/workflows/detekt.yaml)
 
 Utility library for Android with Kotlin to help you to replace the `LiveData` with the `Flow` on the presentation layer.
 

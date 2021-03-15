@@ -85,8 +85,6 @@ fun LifecycleOwner.bindBlock(
     val observer = LifecycleEventObserver { source, _ ->
         val isActive = source.lifecycle.currentState >= minimumLifecycleState
         if (isActive) {
-            // Check if previous job has been completed (or canceled) and
-            // start a new one.
             if (!wasActive) {
                 job?.cancel()
                 job = lifecycleScope.launch {

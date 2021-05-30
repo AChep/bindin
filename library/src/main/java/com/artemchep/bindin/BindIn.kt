@@ -34,6 +34,20 @@ fun <T> LifecycleOwner.bindIn(
     },
 )
 
+@JvmName("bindInUnit")
+@UiThread
+fun LifecycleOwner.bindIn(
+    flow: Flow<Unit>,
+    minimumLifecycleState: Lifecycle.State = DEFAULT_MIN_LIFECYCLE_STATE,
+    pipe: () -> Unit,
+): InBinding<Unit> = bindIn(
+    flow = flow,
+    minimumLifecycleState = minimumLifecycleState,
+    pipe = { _: Unit ->
+        pipe()
+    },
+)
+
 /**
  * The suspending [pipe] is run on the `PausingDispatcher` and hence guarantees
  * that the lifecycle is in the required state. To undo the binding,
@@ -73,6 +87,20 @@ fun <T> LifecycleOwner.bindInSuspending(
         lifecycle.whenStateAtLeast(minimumLifecycleState) {
             pipe(value)
         }
+    },
+)
+
+@JvmName("bindInSuspendingUnit")
+@UiThread
+fun LifecycleOwner.bindInSuspending(
+    flow: Flow<Unit>,
+    minimumLifecycleState: Lifecycle.State = DEFAULT_MIN_LIFECYCLE_STATE,
+    pipe: suspend () -> Unit,
+): InBinding<Unit> = bindInSuspending(
+    flow = flow,
+    minimumLifecycleState = minimumLifecycleState,
+    pipe = { _: Unit ->
+        pipe()
     },
 )
 
